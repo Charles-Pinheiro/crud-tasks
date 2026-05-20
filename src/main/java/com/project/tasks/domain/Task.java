@@ -17,6 +17,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -29,12 +30,14 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder(toBuilder = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Getter
 @Setter
 public class Task {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Long id;
 
     @NotBlank
@@ -72,33 +75,5 @@ public class Task {
     @PreUpdate
     public void preUpdate() {
         updatedAt = LocalDateTime.now();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        Task task = (Task) o;
-        return Objects.equals(id, task.id)
-                && Objects.equals(title, task.title)
-                && Objects.equals(description, task.description)
-                && status == task.status
-                && priority == task.priority
-                && Objects.equals(createdAt, task.createdAt)
-                && Objects.equals(updatedAt, task.updatedAt)
-                && Objects.equals(dueDate, task.dueDate);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(
-                id,
-                title,
-                description,
-                status,
-                priority,
-                createdAt,
-                updatedAt,
-                dueDate
-        );
     }
 }
