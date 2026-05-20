@@ -63,11 +63,6 @@ public class Task {
     @Column(name = "due_date")
     private LocalDateTime dueDate;
 
-    @Builder.Default
-    @NotNull
-    @Column(name = "completed", nullable = false, columnDefinition = "boolean default false")
-    private Boolean completed = false;
-
     @PrePersist
     public void prePersist() {
         createdAt = LocalDateTime.now();
@@ -90,8 +85,7 @@ public class Task {
                 && priority == task.priority
                 && Objects.equals(createdAt, task.createdAt)
                 && Objects.equals(updatedAt, task.updatedAt)
-                && Objects.equals(dueDate, task.dueDate)
-                && Objects.equals(completed, task.completed);
+                && Objects.equals(dueDate, task.dueDate);
     }
 
     @Override
@@ -104,8 +98,7 @@ public class Task {
                 priority,
                 createdAt,
                 updatedAt,
-                dueDate,
-                completed
+                dueDate
         );
     }
 }
