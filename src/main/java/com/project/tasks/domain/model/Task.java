@@ -1,4 +1,4 @@
-package com.project.tasks.domain;
+package com.project.tasks.domain.model;
 
 import com.project.tasks.domain.enumeration.TaskPriority;
 import com.project.tasks.domain.enumeration.TaskStatus;
@@ -23,7 +23,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 @Entity
 @Table(name = "task")
