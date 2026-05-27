@@ -1,0 +1,23 @@
+databaseChangeLog:
+  - changeSet:
+      id: 003-add-user-id-to-task
+      author: charles
+      changes:
+        - addColumn:
+            tableName: task
+            columns:
+              - column:
+                  name: user_id
+                  type: BIGINT
+        - createIndex:
+            tableName: task
+            indexName: task_user_idIDX
+            columns:
+              - column:
+                  name: user_id
+        - addForeignKeyConstraint:
+            baseTableName: task
+            baseColumnNames: user_id
+            constraintName: task_user_idFK
+            referencedTableName: app_user
+            referencedColumnNames: id
