@@ -17,3 +17,8 @@ spring:
 
   liquibase:
     change-log: classpath:/db/changelog/db.changelog-master.yaml
+
+security:
+  jwt:
+    secret: ${JWT_SECRET:ODViOTZmMDYxODAzZDVlYTVhMzUyOWU2ZGU5YmM4M2M1YTdiNzUzOWU1NTBlNzEzZjdkZmJlODI3ZGVjNDFkYTQ5Mjk4YTJmODNkOTE4Y2ZhMzIyODlmOThhM2VjZjMxMGMxMmEyNTBjOWQxODViZmEzOTQ5MTRmZDBlNmEyNjc=}
+    expiration-ms: 3600000
