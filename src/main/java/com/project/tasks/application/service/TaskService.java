@@ -1,10 +1,14 @@
 package com.project.tasks.application.service;
 
 import com.project.tasks.domain.enumeration.TaskStatus;
+import com.project.tasks.domain.enumeration.UserRole;
 import com.project.tasks.domain.model.Task;
+import com.project.tasks.domain.model.User;
 import com.project.tasks.domain.repository.TaskRepository;
 import com.project.tasks.infrastructure.web.dto.UpdateTaskDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,34 +22,42 @@ public class TaskService {
 
     @Transactional(readOnly = true)
     public List<Task> findAll() {
-        return repository.findAll();
+        User currentUser = getCurrentUser();
+
+        if (currentUser.getRole() == UserRole.ROLE_ADMIN) {
+            return repository.findAll();
+        }
+
+        return repository.findAllByOwnerId(currentUser.getId());
     }
 
     @Transactional(readOnly = true)
     public Task findById(Long id) {
-        return repository.findById(id).orElseThrow();
+        return findTaskForCurrentUser(id);
 //        .orElseThrow(() ->
 //                new TaskNotFoundException(id));
     }
 
     @Transactional
     public Task create(Task task) {
+        User currentUser = getCurrentUser();
+
         task.setStatus(TaskStatus.TODO);
+        task.setOwner(currentUser);
 
         return repository.save(task);
     }
 
     @Transactional
     public void delete(Long id) {
-        Task task = repository.findById(id)
-                .orElseThrow();
+        Task task = findTaskForCurrentUser(id);
 
         repository.delete(task);
     }
 
     @Transactional
     public Task update(Long id, UpdateTaskDTO dto) {
-        Task task = repository.findById(id).orElseThrow();
+        Task task = findTaskForCurrentUser(id);
 
         if (dto.title() != null) {
             task.setTitle(dto.title());
@@ -68,5 +80,31 @@ public class TaskService {
         }
 
         return repository.save(task);
+    }
+
+    private User getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new IllegalStateException("Usuário não autenticado.");
+        }
+
+        Object principal = authentication.getPrincipal();
+
+        if (!(principal instanceof User user)) {
+            throw new IllegalStateException("Usuário autenticado inválido.");
+        }
+
+        return user;
+    }
+
+    private Task findTaskForCurrentUser(Long id) {
+        User currentUser = getCurrentUser();
+
+        if (currentUser.getRole() == UserRole.ROLE_ADMIN) {
+            return repository.findById(id).orElseThrow();
+        }
+
+        return repository.findByIdAndOwnerId(id, currentUser.getId()).orElseThrow();
     }
 }
