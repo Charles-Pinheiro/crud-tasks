@@ -1,9 +1,9 @@
 spring:
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/task_db
-    username: task_user
-    password: 123456
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
 
   jpa:
     hibernate:
@@ -20,5 +20,8 @@ spring:
 
 security:
   jwt:
-    secret: ${JWT_SECRET:ODViOTZmMDYxODAzZDVlYTVhMzUyOWU2ZGU5YmM4M2M1YTdiNzUzOWU1NTBlNzEzZjdkZmJlODI3ZGVjNDFkYTQ5Mjk4YTJmODNkOTE4Y2ZhMzIyODlmOThhM2VjZjMxMGMxMmEyNTBjOWQxODViZmEzOTQ5MTRmZDBlNmEyNjc=}
-    expiration-ms: 3600000
+    secret: ${JWT_SECRET}
+    expiration-ms: ${JWT_EXPIRATION_MS}
+
+#server:
+#  port: 8081
