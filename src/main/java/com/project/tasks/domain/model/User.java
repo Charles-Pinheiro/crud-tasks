@@ -39,6 +39,8 @@ import java.util.List;
 @Setter
 public class User implements UserDetails {
 
+    // TODO - SuperClasse com id, uuid, createdAt, updatedAt
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include

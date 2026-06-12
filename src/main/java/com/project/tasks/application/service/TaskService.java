@@ -20,6 +20,10 @@ public class TaskService {
 
     private final TaskRepository repository;
 
+    // TODO - Transactional por que usar em leituras simples? (faz sentido a questão do readOnly?)
+
+    // TODO - DesignPatterns - (chain of responsibility) -> Validação do create task por exemplo -> cadeia de validação com um objetivo
+
     @Transactional(readOnly = true)
     public List<Task> findAll() {
         User currentUser = getCurrentUser();
@@ -59,6 +63,12 @@ public class TaskService {
     public Task update(Long id, UpdateTaskDTO dto) {
         Task task = findTaskForCurrentUser(id);
 
+        updateTaskFields(dto, task);
+
+        return repository.save(task);
+    }
+
+    private void updateTaskFields(UpdateTaskDTO dto, Task task) {
         if (dto.title() != null) {
             task.setTitle(dto.title());
         }
@@ -78,8 +88,6 @@ public class TaskService {
         if (dto.dueDate() != null) {
             task.setDueDate(dto.dueDate());
         }
-
-        return repository.save(task);
     }
 
     private User getCurrentUser() {
