@@ -5,3 +5,5 @@ databaseChangeLog:
       file: db/changelog/migrations/002-create-app-user-table.yaml
   - include:
       file: db/changelog/migrations/003-add-user-id-to-task.yaml
+  - include:
+      file: db/changelog/migrations/004-add-uuid-to-entities.yaml

@@ -1,0 +1,37 @@
+databaseChangeLog:
+  - changeSet:
+      id: 004-add-uuid-to-entities
+      author: charles
+      changes:
+        - addColumn:
+            tableName: task
+            columns:
+              - column:
+                  name: uuid
+                  type: UUID
+        - addColumn:
+            tableName: app_user
+            columns:
+              - column:
+                  name: uuid
+                  type: UUID
+        - sql:
+            sql: UPDATE task SET uuid = gen_random_uuid() WHERE uuid IS NULL;
+        - sql:
+            sql: UPDATE app_user SET uuid = gen_random_uuid() WHERE uuid IS NULL;
+        - addNotNullConstraint:
+            tableName: task
+            columnName: uuid
+            columnDataType: UUID
+        - addNotNullConstraint:
+            tableName: app_user
+            columnName: uuid
+            columnDataType: UUID
+        - addUniqueConstraint:
+            tableName: task
+            columnNames: uuid
+            constraintName: task_uuidUK
+        - addUniqueConstraint:
+            tableName: app_user
+            columnNames: uuid
+            constraintName: app_user_uuidUK
