@@ -12,6 +12,7 @@ import java.util.List;
 
 @Mapper(
         componentModel = "spring",
+        uses = {UserMapper.class},
         injectionStrategy = InjectionStrategy.CONSTRUCTOR,
         unmappedTargetPolicy = ReportingPolicy.IGNORE
 )

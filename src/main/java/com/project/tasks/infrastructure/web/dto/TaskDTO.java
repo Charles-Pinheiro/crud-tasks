@@ -22,6 +22,8 @@ public record TaskDTO(
 
         LocalDateTime updatedAt,
 
-        LocalDateTime dueDate
+        LocalDateTime dueDate,
+
+        OwnerDTO owner
 ) {
 }
