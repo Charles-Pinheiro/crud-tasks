@@ -4,11 +4,12 @@ import com.project.tasks.domain.enumeration.TaskPriority;
 import com.project.tasks.domain.enumeration.TaskStatus;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 
 public record TaskDTO(
 
-        Long id,
+        UUID uuid,
 
         String title,
 

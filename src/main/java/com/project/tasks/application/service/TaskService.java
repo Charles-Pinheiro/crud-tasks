@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -34,8 +35,8 @@ public class TaskService {
     }
 
     @Transactional(readOnly = true)
-    public Task findById(Long id) {
-        return findTaskForCurrentUser(id);
+    public Task findByUuid(UUID uuid) {
+        return findTaskForCurrentUser(uuid);
 //        .orElseThrow(() ->
 //                new TaskNotFoundException(id));
     }
@@ -51,15 +52,15 @@ public class TaskService {
     }
 
     @Transactional
-    public void delete(Long id) {
-        Task task = findTaskForCurrentUser(id);
+    public void delete(UUID uuid) {
+        Task task = findTaskForCurrentUser(uuid);
 
         repository.delete(task);
     }
 
     @Transactional
-    public Task update(Long id, UpdateTaskDTO dto) {
-        Task task = findTaskForCurrentUser(id);
+    public Task update(UUID uuid, UpdateTaskDTO dto) {
+        Task task = findTaskForCurrentUser(uuid);
 
         updateTaskFields(dto, task);
 
@@ -104,13 +105,13 @@ public class TaskService {
         return user;
     }
 
-    private Task findTaskForCurrentUser(Long id) {
+    private Task findTaskForCurrentUser(UUID uuid) {
         User currentUser = getCurrentUser();
 
         if (currentUser.getRole() == UserRole.ROLE_ADMIN) {
-            return repository.findById(id).orElseThrow();
+            return repository.findByUuid(uuid).orElseThrow();
         }
 
-        return repository.findByIdAndOwnerId(id, currentUser.getId()).orElseThrow();
+        return repository.findByUuidAndOwnerId(uuid, currentUser.getId()).orElseThrow();
     }
 }

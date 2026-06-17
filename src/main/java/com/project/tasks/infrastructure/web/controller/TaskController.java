@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/tasks")
@@ -36,11 +37,11 @@ public class TaskController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{uuid}")
     public ResponseEntity<TaskDTO> findById(
-            @PathVariable Long id
+            @PathVariable UUID uuid
     ) {
-        TaskDTO response = mapper.toTaskDTO(service.findById(id));
+        TaskDTO response = mapper.toTaskDTO(service.findByUuid(uuid));
 
         return ResponseEntity.ok(response);
     }
@@ -53,24 +54,24 @@ public class TaskController {
 
         TaskDTO response = mapper.toTaskDTO(service.create(task));
 
-        return ResponseEntity.created(URI.create("/tasks/" + response.id())).body(response);
+        return ResponseEntity.created(URI.create("/tasks/" + response.uuid())).body(response);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{uuid}")
     public ResponseEntity<Void> delete(
-            @PathVariable Long id
+            @PathVariable UUID uuid
     ) {
-        service.delete(id);
+        service.delete(uuid);
 
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/{id}")
+    @PatchMapping("/{uuid}")
     public ResponseEntity<TaskDTO> update(
-            @PathVariable Long id,
+            @PathVariable UUID uuid,
             @RequestBody @Valid UpdateTaskDTO request
     ) {
-        TaskDTO response = mapper.toTaskDTO(service.update(id, request));
+        TaskDTO response = mapper.toTaskDTO(service.update(uuid, request));
 
         return ResponseEntity.ok(response);
     }
