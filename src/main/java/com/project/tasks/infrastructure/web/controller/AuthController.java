@@ -25,10 +25,10 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<AuthResponseDTO> register(
             @RequestBody @Valid RegisterRequestDTO request
-    ) throws URISyntaxException {
+    ) {
         AuthResponseDTO response = service.register(request);
 
-        return ResponseEntity.created(new URI("/register/")).body(response);
+        return ResponseEntity.created(URI.create("/tasks/")).body(response);
     }
 
     @PostMapping("/login")

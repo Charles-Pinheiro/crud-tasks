@@ -49,12 +49,12 @@ public class TaskController {
     @PostMapping
     public ResponseEntity<TaskDTO> create(
             @RequestBody @Valid CreateTaskDTO request
-    ) throws URISyntaxException {
+    ) {
         Task task = mapper.toEntity(request);
 
         TaskDTO response = mapper.toTaskDTO(service.create(task));
 
-        return ResponseEntity.created(new URI("/tasks/" + response.id())).body(response);
+        return ResponseEntity.created(URI.create("/tasks/" + response.id())).body(response);
     }
 
     @DeleteMapping("/{id}")
