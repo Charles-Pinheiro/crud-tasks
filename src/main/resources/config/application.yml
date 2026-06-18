@@ -23,5 +23,9 @@ security:
     secret: ${JWT_SECRET}
     expiration-ms: ${JWT_EXPIRATION_MS}
 
+tasks:
+  validation:
+    max-open-tasks-per-user: ${TASKS_VALIDATION_MAX_OPEN_TASKS_PER_USER:10}
+
 #server:
 #  port: 8081

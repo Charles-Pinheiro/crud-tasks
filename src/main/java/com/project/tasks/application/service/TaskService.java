@@ -2,6 +2,8 @@ package com.project.tasks.application.service;
 
 import com.project.tasks.application.exception.BusinessException;
 import com.project.tasks.application.exception.ErrorConstants;
+import com.project.tasks.application.validation.task.create.CreateTaskValidationChain;
+import com.project.tasks.application.validation.task.create.CreateTaskValidationContext;
 import com.project.tasks.domain.enumeration.TaskStatus;
 import com.project.tasks.domain.enumeration.UserRole;
 import com.project.tasks.domain.model.Task;
@@ -23,8 +25,7 @@ import java.util.UUID;
 public class TaskService {
 
     private final TaskRepository repository;
-
-    // TODO - DesignPatterns - (chain of responsibility) -> Validação do create task por exemplo -> cadeia de validação com um objetivo
+    private final CreateTaskValidationChain createTaskValidationChain;
 
     @Transactional(readOnly = true)
     public List<Task> findAll() {
@@ -45,6 +46,8 @@ public class TaskService {
     @Transactional
     public Task create(Task task) {
         User currentUser = getCurrentUser();
+
+        createTaskValidationChain.validate(new CreateTaskValidationContext(task, currentUser));
 
         task.setStatus(TaskStatus.TODO);
         task.setOwner(currentUser);

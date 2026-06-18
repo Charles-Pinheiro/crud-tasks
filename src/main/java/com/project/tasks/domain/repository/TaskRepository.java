@@ -1,5 +1,6 @@
 package com.project.tasks.domain.repository;
 
+import com.project.tasks.domain.enumeration.TaskStatus;
 import com.project.tasks.domain.model.Task;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -16,4 +17,8 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     List<Task> findAllByOwnerId(Long ownerId);
 
     Optional<Task> findByUuidAndOwnerId(UUID uuid, Long ownerId);
+
+    boolean existsByOwnerIdAndTitleIgnoreCase(Long ownerId, String title);
+
+    long countByOwnerIdAndStatusIn(Long ownerId, List<TaskStatus> statuses);
 }
