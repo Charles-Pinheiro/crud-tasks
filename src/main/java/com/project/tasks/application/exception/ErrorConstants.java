@@ -5,7 +5,9 @@ import lombok.Getter;
 @Getter
 public enum ErrorConstants {
 
-    TASK_NOT_FOUND("Task not found"),
+    UNAUTHENTICATED("Unauthenticated user"),
+    INVALID_USER("Invalid authenticated user"),
+    EMAIL_ALREADY_EXISTS("Email already exists"),
     ;
 
     private final String message;

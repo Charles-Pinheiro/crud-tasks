@@ -39,4 +39,14 @@ public class BusinessException extends RuntimeException {
         return () -> new BusinessException(entityClass);
     }
 
+    public static void throwIf(
+            boolean conditional,
+            ErrorConstants errorConstants,
+            HttpStatus status
+    ) {
+        if (conditional) {
+            throw new BusinessException(errorConstants, status);
+        }
+    }
+
 }

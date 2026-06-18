@@ -1,5 +1,7 @@
 package com.project.tasks.application.service;
 
+import com.project.tasks.application.exception.BusinessException;
+import com.project.tasks.application.exception.ErrorConstants;
 import com.project.tasks.domain.enumeration.TaskStatus;
 import com.project.tasks.domain.enumeration.UserRole;
 import com.project.tasks.domain.model.Task;
@@ -7,6 +9,7 @@ import com.project.tasks.domain.model.User;
 import com.project.tasks.domain.repository.TaskRepository;
 import com.project.tasks.infrastructure.web.dto.UpdateTaskDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -37,8 +40,6 @@ public class TaskService {
     @Transactional(readOnly = true)
     public Task findByUuid(UUID uuid) {
         return findTaskForCurrentUser(uuid);
-//        .orElseThrow(() ->
-//                new TaskNotFoundException(id));
     }
 
     @Transactional
@@ -92,26 +93,32 @@ public class TaskService {
     private User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if (authentication == null || !authentication.isAuthenticated()) {
-            throw new IllegalStateException("Usuário não autenticado.");
-        }
+        BusinessException.throwIf(
+                authentication == null || !authentication.isAuthenticated(),
+                ErrorConstants.UNAUTHENTICATED,
+                HttpStatus.UNAUTHORIZED
+        );
 
         Object principal = authentication.getPrincipal();
 
-        if (!(principal instanceof User user)) {
-            throw new IllegalStateException("Usuário autenticado inválido.");
-        }
+        BusinessException.throwIf(
+                !(principal instanceof User),
+                ErrorConstants.INVALID_USER,
+                HttpStatus.UNAUTHORIZED
+        );
 
-        return user;
+        return (User) principal;
     }
 
     private Task findTaskForCurrentUser(UUID uuid) {
         User currentUser = getCurrentUser();
 
         if (currentUser.getRole() == UserRole.ROLE_ADMIN) {
-            return repository.findByUuid(uuid).orElseThrow();
+            return repository.findByUuid(uuid)
+                    .orElseThrow(BusinessException.notFound(Task.class));
         }
 
-        return repository.findByUuidAndOwnerId(uuid, currentUser.getId()).orElseThrow();
+        return repository.findByUuidAndOwnerId(uuid, currentUser.getId())
+                .orElseThrow(BusinessException.notFound(Task.class));
     }
 }

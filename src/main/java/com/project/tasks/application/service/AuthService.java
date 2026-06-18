@@ -1,5 +1,7 @@
 package com.project.tasks.application.service;
 
+import com.project.tasks.application.exception.BusinessException;
+import com.project.tasks.application.exception.ErrorConstants;
 import com.project.tasks.domain.enumeration.UserRole;
 import com.project.tasks.domain.model.User;
 import com.project.tasks.domain.repository.UserRepository;
@@ -9,9 +11,9 @@ import com.project.tasks.infrastructure.web.dto.auth.LoginRequestDTO;
 import com.project.tasks.infrastructure.web.dto.auth.RegisterRequestDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,9 +33,11 @@ public class AuthService {
 
     @Transactional
     public AuthResponseDTO register(RegisterRequestDTO request) {
-        if (userRepository.existsByEmail(request.email())) {
-            throw new IllegalArgumentException("Email já cadastrado.");
-        }
+        BusinessException.throwIf(
+                userRepository.existsByEmail(request.email()),
+                ErrorConstants.EMAIL_ALREADY_EXISTS,
+                HttpStatus.BAD_REQUEST
+        );
 
         User user = User.builder()
                 .name(request.name())
@@ -63,7 +67,7 @@ public class AuthService {
         );
 
         User user = userRepository.findByEmail(request.email())
-                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado."));
+                .orElseThrow(BusinessException.notFound(User.class));
 
         String token = jwtService.generateToken(user);
 
