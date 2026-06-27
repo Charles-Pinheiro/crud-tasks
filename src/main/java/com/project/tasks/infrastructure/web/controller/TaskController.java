@@ -38,7 +38,7 @@ public class TaskController {
     }
 
     @GetMapping("/{uuid}")
-    public ResponseEntity<TaskDTO> findById(
+    public ResponseEntity<TaskDTO> findByUuid(
             @PathVariable UUID uuid
     ) {
         TaskDTO response = mapper.toTaskDTO(service.findByUuid(uuid));
