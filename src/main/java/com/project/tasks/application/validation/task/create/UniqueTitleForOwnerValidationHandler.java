@@ -19,7 +19,7 @@ public class UniqueTitleForOwnerValidationHandler extends CreateTaskValidationHa
     protected void validateCurrent(CreateTaskValidationContext context) {
         BusinessException.throwIf(
                 repository.existsByOwnerIdAndTitleIgnoreCase(
-                        context.currentUser().getId(),
+                        context.owner().getId(),
                         context.task().getTitle()
                 ),
                 ErrorConstants.TASK_TITLE_ALREADY_EXISTS,

@@ -9,6 +9,7 @@ import com.project.tasks.domain.enumeration.UserRole;
 import com.project.tasks.domain.model.Task;
 import com.project.tasks.domain.model.User;
 import com.project.tasks.domain.repository.TaskRepository;
+import com.project.tasks.domain.repository.UserRepository;
 import com.project.tasks.infrastructure.web.dto.UpdateTaskDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,6 +26,7 @@ import java.util.UUID;
 public class TaskService {
 
     private final TaskRepository repository;
+    private final UserRepository userRepository;
     private final CreateTaskValidationChain createTaskValidationChain;
 
     @Transactional(readOnly = true)
@@ -46,11 +48,17 @@ public class TaskService {
     @Transactional
     public Task create(Task task) {
         User currentUser = getCurrentUser();
+        User owner = currentUser;
 
-        createTaskValidationChain.validate(new CreateTaskValidationContext(task, currentUser));
+        if (currentUser.getRole() == UserRole.ROLE_ADMIN && task.getOwner() != null) {
+            owner = userRepository.findByUuid(task.getOwner().getUuid())
+                    .orElseThrow(BusinessException.notFound(User.class));
+        }
+
+        createTaskValidationChain.validate(new CreateTaskValidationContext(task, owner));
 
         task.setStatus(TaskStatus.TODO);
-        task.setOwner(currentUser);
+        task.setOwner(owner);
 
         return repository.save(task);
     }

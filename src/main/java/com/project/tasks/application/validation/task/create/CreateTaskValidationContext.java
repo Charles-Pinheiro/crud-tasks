@@ -5,6 +5,6 @@ import com.project.tasks.domain.model.User;
 
 public record CreateTaskValidationContext(
         Task task,
-        User currentUser
+        User owner
 ) {
 }

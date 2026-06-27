@@ -11,6 +11,7 @@ import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -27,6 +28,7 @@ public abstract class AbstractEntity {
 
     @Column(name = "uuid", nullable = false, updatable = false, unique = true)
     @EqualsAndHashCode.Include
+    @Setter
     private UUID uuid = UUID.randomUUID();
 
     @Column(name = "created_at", nullable = false, updatable = false)

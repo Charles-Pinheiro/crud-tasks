@@ -1,6 +1,7 @@
 package com.project.tasks.infrastructure.web.dto;
 
 import com.project.tasks.domain.enumeration.TaskPriority;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -16,6 +17,9 @@ public record CreateTaskDTO(
         @NotNull
         TaskPriority priority,
 
-        LocalDateTime dueDate
+        LocalDateTime dueDate,
+
+        @Valid
+        OwnerUuidDTO owner
 ) {
 }

@@ -31,12 +31,12 @@ public class OpenTaskLimitValidationHandler extends CreateTaskValidationHandler 
 
     @Override
     protected void validateCurrent(CreateTaskValidationContext context) {
-        if (context.currentUser().getRole() == UserRole.ROLE_ADMIN) {
+        if (context.owner().getRole() == UserRole.ROLE_ADMIN) {
             return;
         }
 
         long openTasks = repository.countByOwnerIdAndStatusIn(
-                context.currentUser().getId(),
+                context.owner().getId(),
                 OPEN_STATUSES
         );
 
