@@ -32,7 +32,7 @@ public class AuthControllerTest {
         );
 
         AuthResponseDTO authDto = new AuthResponseDTO(
-                "name",
+                "token1234",
                 3600L,
                 "ROLE_USER"
         );
@@ -53,12 +53,12 @@ public class AuthControllerTest {
     @Test
     void shouldLogin() {
         LoginRequestDTO loginDto = new LoginRequestDTO(
-                "name",
-                "email@mail.com"
+                "email@mail.com",
+                "123456789"
         );
 
         AuthResponseDTO authDto = new AuthResponseDTO(
-                "name",
+                "token1234",
                 3600L,
                 "ROLE_USER"
         );
