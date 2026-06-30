@@ -3,6 +3,8 @@ package com.project.tasks.infrastructure.web.mapper;
 import com.project.tasks.domain.model.User;
 import com.project.tasks.infrastructure.web.dto.OwnerDTO;
 import com.project.tasks.infrastructure.web.dto.OwnerUuidDTO;
+import org.mapstruct.BeanMapping;
+import org.mapstruct.Builder;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
@@ -16,5 +18,6 @@ public interface UserMapper {
 
     OwnerDTO toOwnerDTO(User entity);
 
+    @BeanMapping(builder = @Builder(disableBuilder = true))
     User toEntity(OwnerUuidDTO dto);
 }
