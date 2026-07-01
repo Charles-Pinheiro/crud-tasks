@@ -58,7 +58,7 @@ public class TaskControllerTest {
 
         Mockito.when(service.findAll())
                 .thenReturn(tasks);
-        Mockito.when(mapper.toListTaskDTO(tasks))
+        Mockito.when(mapper.toTaskDTOList(tasks))
                 .thenReturn(listDto);
 
         HttpStatusCode statusCodeExpected = HttpStatusCode.valueOf(200);
@@ -69,7 +69,7 @@ public class TaskControllerTest {
         Assertions.assertEquals(statusCodeExpected, response.getStatusCode());
 
         Mockito.verify(service).findAll();
-        Mockito.verify(mapper).toListTaskDTO(tasks);
+        Mockito.verify(mapper).toTaskDTOList(tasks);
     }
 
     @Test

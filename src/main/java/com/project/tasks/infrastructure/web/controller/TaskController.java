@@ -32,7 +32,7 @@ public class TaskController {
 
     @GetMapping
     public ResponseEntity<List<TaskDTO>> findAll() {
-        List<TaskDTO> response = mapper.toListTaskDTO(service.findAll());
+        List<TaskDTO> response = mapper.toTaskDTOList(service.findAll());
 
         return ResponseEntity.ok(response);
     }
